@@ -18,7 +18,7 @@ public class Solution {
         d.neighbors.add(a);
         d.neighbors.add(c);
 
-        Node res = new Solution().cloneGraphBFS(a);
+        Node res = new Solution().cloneGraphDFS(a);
         new Solution().printAllNeighbors(res);
     }
 
@@ -41,6 +41,14 @@ public class Solution {
         }
     }
 
+    // BFS
+    // Use a Queue to run BFS. Use a HashMap<old node, new node> to prevent duplicate
+    // Initiate with the input node into the queue and add to hashmap
+    // Expand from the queue and iterate the cur node's neighbors. If the neighbor node is not in the map, add to the map and offer to the queue.
+    // Get the copied node from map and add neighbor node to its neighbors arraylist
+    // Repeat above until the queue is empty. Return the input node from hashmap
+
+    // Time: O(n+k) while k is the number of neighbor nodes, Space: O(n)
     public Node cloneGraphBFS(Node node) {
         if(node == null) {
             return node;
@@ -63,5 +71,32 @@ public class Solution {
         }
 
         return map.get(node);
+    }
+
+    // DFS
+    // Use a HashMap<old node, new node> to prevnet duplicates
+    // At each level, add the current node to hashmap. Loop its neighbors, if the neighbor node is not in the hashmap, call recursion function with neighbor node as the input
+    // After recursion, add the neighbor node to the new node in the hashmap
+    // Return the new node from the hashmap
+
+    // Time: O(n+k) while k is the number of edges, Space: O(n)
+
+    public Node cloneGraphDFS(Node node) {
+        if(node == null) {
+            return node;
+        }
+        HashMap<Node, Node> map = new HashMap();
+        dfs(node, map);
+        return map.get(node);
+    }
+
+    public void dfs(Node node, HashMap<Node, Node> map) {
+        map.put(node, new Node(node.val));
+        for(Node nei : node.neighbors) {
+            if(!map.containsKey(nei)) {
+                dfs(nei, map);
+            }
+            map.get(node).neighbors.add(map.get(nei));
+        }
     }
 }
