@@ -1,57 +1,41 @@
-// Iterating each item in shopping cart, if it matches the first item in codeList, keep looking
-// to find if the rest of items matches the code list? If so, set global found to be true
-// Else, move on to the next item in cart and keep doing previous step
-// Return 0 at the end
-// Time: O(mn*k) while mn is the length of codeList and k is the length of shopping cart.
-// Space: O(1)
+// Two Pointers:
+// Use an index ofr shopping cart, and the other for codeList row index since we want to know
+// if a whole row of code is matched.
+// While the cart index is within boundary, check if current codeList matches? If so, move cart index
+// to the length of that codeList row; Otherwise, just move cart index
+// Return if the codeList index has reached the end?
 public class Solution {
     public static void main(String[] args) {
         String [][] codeList = {{"apple", "apple"}, {"banana", "anything", "banana"}};
-        String [] shoppingCart = new String[]{"apple", "banana", "apple", "banana", "orange", "banana"};
+        String [] shoppingCart = new String[]{"orange", "apple", "apple", "banana", "orange", "banana"};
         System.out.println(new Solution().freshPromotion(codeList, shoppingCart));
     }
     private int freshPromotion(String[][] codeList, String[] shoppingCart) {
-        boolean winner = false;
-        int countCode = 0;
-        for(String [] arr : codeList) {
-            countCode += arr.length;
-        }
-        for(int i = 0; i < shoppingCart.length && i <= shoppingCart.length - countCode; i++) {
-            String item = shoppingCart[i];
-            int index = i;
-            if(item.equals(codeList[0][0])) {
-                String code;
-                boolean notFound = false;
-                for(int j = 0; j < codeList.length; j++) {
-                    for(int k = 0; k < codeList[0].length; k++) {
-                        item = shoppingCart[index];
-                        code = codeList[j][k];
-                        if(item.equals(code) || code.equals("anything")) {
-                            index++;
-                        }
-                        else {
-                            notFound = true;
-                            break;
-                        }
-
-                        if(index == shoppingCart.length && k != codeList[0].length - 1) {
-                            notFound = true;
-                            break;
-                        }
-                    }
-                    if(notFound || (index == shoppingCart.length && j != codeList.length - 1)) {
-                        break;
-                    }
-                    else {
-                        winner = true;
-                    }
-                }
+        int cartIdx = 0;
+        int codeRowIndex = 0;
+        while(cartIdx < shoppingCart.length && codeRowIndex < codeList.length) {
+            if(matches(cartIdx, shoppingCart, codeList[codeRowIndex])) {
+                cartIdx += codeList[codeRowIndex].length;
+                codeRowIndex++;
             }
-
-            if(winner) {
-                return 1;
+            else {
+                cartIdx++;
             }
         }
-        return 0;
+        return codeRowIndex == codeList.length ? 1 : 0;
+    }
+
+    private boolean matches(int i, String [] shoppingCart, String [] list) {
+        int j = 0;
+        while(i < shoppingCart.length && j < list.length) {
+            if(shoppingCart[i].equals(list[j]) || list[j].equals("anything")) {
+                i++;
+                j++;
+            }
+            else {
+                return false;
+            }
+        }
+        return true;
     }
 }
