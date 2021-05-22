@@ -2,7 +2,7 @@ import java.util.*;
 
 public class Solution {
     public static void main(String[] args) {
-        List<PairString> ia = new ArrayList(Arrays.asList(new PairString("item1", "item2"), new PairString("item6", "item1"), new PairString("item3", "item4"), new PairString("item4", "item5")));
+        List<PairString> ia = new ArrayList(Arrays.asList(new PairString("item1", "item2"), new PairString("item6", "item1"), new PairString("item3", "item4"), new PairString("item4", "item5"), new PairString("item4", "item2")));
 
         System.out.println(new Solution().LargestItemAssociation2(ia));
     }
@@ -67,14 +67,14 @@ public class Solution {
                 weightMap.putIfAbsent(r1, 1);
                 weightMap.putIfAbsent(r2, 1);
                 if (r1.compareTo(r2) < 0) {
-                    map.put(r2, r1);
+                    map.put(find(r2, map), r1);
                     weightMap.put(r1, weightMap.get(r1) + weightMap.get(r2));
                     if (weightMap.get(r1) > max || (max == weightMap.get(r1) && r1.compareTo(tmp) < 0)) {
                         max = weightMap.get(r1);
                         tmp = r1;
                     }
                 } else {
-                    map.put(r1, r2);
+                    map.put(find(r1, map), r2);
                     weightMap.put(r2, weightMap.get(r2) + weightMap.get(r1));
                     if (weightMap.get(r2) > max || (max == weightMap.get(r2) && r2.compareTo(tmp) < 0)) {
                         max = weightMap.get(r2);
@@ -84,11 +84,8 @@ public class Solution {
             }
         }
         List<String> res = new ArrayList();
-        HashSet<String> hs = new HashSet();
-        hs.add(tmp);
         for (Map.Entry<String, String> entry : map.entrySet()) {
-            if (hs.contains(entry.getValue())) {
-                hs.add(entry.getKey());
+            if (find(entry.getValue(), map).equals(tmp)) {
                 res.add(entry.getKey());
             }
         }
