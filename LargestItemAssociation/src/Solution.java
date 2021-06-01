@@ -67,14 +67,14 @@ public class Solution {
                 weightMap.putIfAbsent(r1, 1);
                 weightMap.putIfAbsent(r2, 1);
                 if (r1.compareTo(r2) < 0) {
-                    map.put(find(r2, map), r1);
+                    map.put(map.get(r2), r1);
                     weightMap.put(r1, weightMap.get(r1) + weightMap.get(r2));
                     if (weightMap.get(r1) > max || (max == weightMap.get(r1) && r1.compareTo(tmp) < 0)) {
                         max = weightMap.get(r1);
                         tmp = r1;
                     }
                 } else {
-                    map.put(find(r1, map), r2);
+                    map.put(map.get(r1), r2);
                     weightMap.put(r2, weightMap.get(r2) + weightMap.get(r1));
                     if (weightMap.get(r2) > max || (max == weightMap.get(r2) && r2.compareTo(tmp) < 0)) {
                         max = weightMap.get(r2);
